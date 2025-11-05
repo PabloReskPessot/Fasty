@@ -15,7 +15,7 @@ import { CategoriaModule } from './categoria/categoria.module';
 import { RestauranteModule } from './restaurante/restaurante.module';
 import { AdministradorRestauranteModule } from './administrador-restaurante/administrador-restaurante.module';
 import { DireccionModule } from './direccion/direccion.module';
-import { UsuariosModule } from './usuarios/usuarios.module';
+
 
 @Module({
   imports: [UsuariosModule, DireccionModule, AdministradorRestauranteModule, RestauranteModule, CategoriaModule, CategoriarestauranteModule, PlatoModule, PedidoModule, DetallepedidoModule, DescuentoModule, MetodopagoModule, AdministradorBackofficeModule, RepartidorModule, ReseniaRepartidorModule],
