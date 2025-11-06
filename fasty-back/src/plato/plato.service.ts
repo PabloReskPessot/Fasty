@@ -23,4 +23,7 @@ export class PlatoService {
   remove(id: number) {
     return `This action removes a #${id} plato`;
   }
+
+  
+
 }

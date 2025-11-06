@@ -24,11 +24,11 @@ import { DireccionModule } from './direccion/direccion.module';
       type: 'postgres',
       host: 'localhost',
       port: 5432,
-      username: 'your_username',
-      password: 'your_password',
-      database: 'your_database_name',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'], // Busca automáticamente todas las entidades
-      synchronize: true, // ¡Cuidado en producción!
+      username: 'postgres',
+      password: '123',
+      database: 'fasty-db',
+      entities: [__dirname + '/**/*.entity{.ts,.js}'], // Busca automáticamente todas las entidades - recomendado por el chat
+      synchronize: true, // lo recomendo el chat, quitar despues de terminar de usarlo
     }),
   ],
   controllers: [AppController],

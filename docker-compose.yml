@@ -22,7 +22,7 @@ services:
     environment:
       DATABASE_HOST: fasty-db
       DATABASE_PORT: 5432
-      DATABASE_USER: pabloresk
+      DATABASE_USER: postgres
       DATABASE_PASSWORD: 123
       DATABASE_NAME: fasty
 

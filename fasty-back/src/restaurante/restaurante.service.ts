@@ -23,4 +23,12 @@ export class RestauranteService {
   remove(id: number) {
     return `This action removes a #${id} restaurante`;
   }
+
+  // Buscar restaurantes/tiendas → endpoint con filtros y queries.
+  // Ejemplo: /restaurantes?ciudad=Madrid&tipoComida=Italiana&abiertoAhora=true
+  // Este endpoint debería aceptar varios parámetros opcionales para filtrar los resultados.
+
+  
+
+
 }
