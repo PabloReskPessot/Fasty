@@ -17,6 +17,9 @@ import { RestauranteModule } from './restaurante/restaurante.module';
 import { AdministradorRestauranteModule } from './administrador-restaurante/administrador-restaurante.module';
 import { DireccionModule } from './direccion/direccion.module';
 import { ConfigModule } from '@nestjs/config';
+import { ReseniaRestauranteModule } from './resenia-restaurante/resenia-restaurante.module';
+import { DireccionrestauranteModule } from './direccionrestaurante/direccionrestaurante.module';
+import { ReseniaRestauranteModule } from './resenia-restaurante/resenia-restaurante.module';
 
 
 @Module({
@@ -31,7 +34,7 @@ import { ConfigModule } from '@nestjs/config';
       database: process.env.DATABASE_NAME,
       autoLoadEntities: true,
       synchronize: true,
-    }),UsuariosModule,
+    }),UsuariosModule, ReseniaRestauranteModule, DireccionrestauranteModule,
   ],
   controllers: [AppController],
   providers: [AppService],

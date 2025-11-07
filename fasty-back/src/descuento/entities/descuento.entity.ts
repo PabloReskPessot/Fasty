@@ -1,1 +1,39 @@
-export class Descuento {}
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Pedido } from '../../pedido/entities/pedido.entity';
+import { Detallepedido } from '../../detallepedido/entities/detallepedido.entity';
+
+@Entity()
+export class Descuento {
+  @PrimaryGeneratedColumn()
+  descuentoID: number;
+
+  @Column()
+  descripcion: string;
+
+  @Column()
+  tipo: string;
+
+  @Column({ type: 'decimal', precision: 5, scale: 2 })
+  valor: number;
+
+  @Column({ type: 'datetime' })
+  fechaInicio: Date;
+
+  @Column({ type: 'datetime' })
+  fechaFin: Date;
+
+  @Column({ nullable: true })
+  codigo: string;
+
+  @Column({ nullable: true })
+  row: string;
+
+  @Column({ default: true })
+  activo: boolean;
+
+  @OneToMany(() => Pedido, (pedido) => pedido.descuento)
+  pedidos: Pedido[];
+
+  @OneToMany(() => Detallepedido, (detalle) => detalle.descuento)
+  detalles: Detallepedido[];
+}
