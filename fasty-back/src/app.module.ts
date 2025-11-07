@@ -16,22 +16,24 @@ import { CategoriaModule } from './categoria/categoria.module';
 import { RestauranteModule } from './restaurante/restaurante.module';
 import { AdministradorRestauranteModule } from './administrador-restaurante/administrador-restaurante.module';
 import { DireccionModule } from './direccion/direccion.module';
+import { ConfigModule } from '@nestjs/config';
 
 
 @Module({
-  imports: [UsuariosModule, DireccionModule, AdministradorRestauranteModule, RestauranteModule, CategoriaModule, CategoriarestauranteModule, PlatoModule, PedidoModule, DetallepedidoModule, DescuentoModule, MetodopagoModule, AdministradorBackofficeModule, RepartidorModule, ReseniaRepartidorModule,
+  imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '123',
-      database: 'fasty-db',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'], // Busca automáticamente todas las entidades - recomendado por el chat
-      synchronize: true, // lo recomendo el chat, quitar despues de terminar de usarlo
+      host: process.env.DATABASE_HOST,
+      port: parseInt(process.env.DATABASE_PORT ?? '5432', 10),
+      username: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
+      autoLoadEntities: true,
+      synchronize: true,
     }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

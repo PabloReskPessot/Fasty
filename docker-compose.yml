@@ -1,12 +1,11 @@
-
 services:
   fasty-db:
     image: postgres:15
     restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: fasty
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: fasty-db
     ports:
       - "5432:5432"
     volumes:
@@ -24,7 +23,7 @@ services:
       DATABASE_PORT: 5432
       DATABASE_USER: postgres
       DATABASE_PASSWORD: 123
-      DATABASE_NAME: fasty
+      DATABASE_NAME: fasty-db
 
   fasty-front:
     build: ./fasty-front
@@ -37,3 +36,5 @@ services:
 
 volumes:
   fasty_data:
+
+
