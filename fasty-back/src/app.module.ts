@@ -31,7 +31,7 @@ import { ConfigModule } from '@nestjs/config';
       database: process.env.DATABASE_NAME,
       autoLoadEntities: true,
       synchronize: true,
-    }),
+    }),UsuariosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,30 +1,28 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity('usuarios')
+@Entity()
 export class Usuario {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    nombre: string;
+  @Column()
+  nombre: string;
 
-    @Column()
-    apellido: string;
+  @Column()
+  apellido: string;
 
-    @Column()
-    email: string;
+  @Column()
+  email: string;
 
-    @Column()
-    password: string;
+  @Column()
+  password: string;
 
-    @Column()
-    fechaNacimiento: Date;
+  @Column()
+  fechaNacimiento: Date;
 
-    @Column()
-    genero: string;
+  @Column()
+  genero: string;
 
-    @Column()
-    activo: boolean;
-   
+  @Column()
+  activo: boolean;
 }
-
