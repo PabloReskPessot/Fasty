@@ -3,14 +3,14 @@ import { Usuario } from '../../usuarios/entities/usuario.entity';
 import { Repartidor } from '../../repartidor/entities/repartidor.entity';
 
 @Entity()
-export class ResenaRepartidor {
+export class ReseniaRepartidor {
   @PrimaryGeneratedColumn()
-  resenaRepartidorID: number;
+  reseniaRepartidorID: number;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.reseniasRepartidores)
+  @ManyToOne(() => Usuario, (usuario) => usuario.reseniaRepartidores)
   usuario: Usuario;
 
-  @ManyToOne(() => Repartidor, (repartidor) => repartidor.resenas)
+  @ManyToOne(() => Repartidor, (repartidor) => repartidor.resenia)
   repartidor: Repartidor;
 
   @Column()

@@ -32,5 +32,5 @@ export class Repartidor {
   pedidos: Pedido[];
 
   @OneToMany(() => ReseniaRepartidor, (resenia) => resenia.repartidor)
-  resenas: ReseniaRepartidor[];
+  resenia: ReseniaRepartidor[];
 }

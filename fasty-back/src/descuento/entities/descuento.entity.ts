@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Pedido } from '../../pedido/entities/pedido.entity';
-import { Detallepedido } from '../../detallepedido/entities/detallepedido.entity';
+import { DetallePedido } from '../../detallepedido/entities/detallepedido.entity';
 
 @Entity()
 export class Descuento {
@@ -34,6 +34,6 @@ export class Descuento {
   @OneToMany(() => Pedido, (pedido) => pedido.descuento)
   pedidos: Pedido[];
 
-  @OneToMany(() => Detallepedido, (detalle) => detalle.descuento)
-  detalles: Detallepedido[];
+  @OneToMany(() => DetallePedido, (detalle) => detalle.descuento)
+  detalles: DetallePedido[];
 }

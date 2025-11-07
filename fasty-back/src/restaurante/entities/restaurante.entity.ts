@@ -10,9 +10,6 @@ export class Restaurante {
   restauranteID: number;
 
   @Column()
-  cuit: string;
-
-  @Column()
   nombre: string;
 
   @Column({ nullable: true })

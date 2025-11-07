@@ -3,11 +3,11 @@ import { Usuario } from '../../usuarios/entities/usuario.entity';
 import { Restaurante } from '../../restaurante/entities/restaurante.entity';
 
 @Entity()
-export class ResenaRestaurante {
+export class ReseniaRestaurante {
   @PrimaryGeneratedColumn()
-  resenaRestauranteID: number;
+  reseniaRestauranteID: number;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.resenasRestaurantes)
+  @ManyToOne(() => Usuario, (usuario) => usuario.reseniaRestaurantes)
   usuario: Usuario;
 
   @ManyToOne(() => Restaurante, (restaurante) => restaurante)

@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { Restaurante } from '../../restaurante/entities/restaurante.entity';
-import { Detallepedido } from '../../detallepedido/entities/detallepedido.entity';
+import { DetallePedido } from '../../detallepedido/entities/detallepedido.entity';
 
 @Entity()
 export class Plato {
@@ -25,6 +25,6 @@ export class Plato {
   @ManyToOne(() => Restaurante, (restaurante) => restaurante.platos)
   restaurante: Restaurante;
 
-  @OneToMany(() => Detallepedido, (detalle) => detalle.plato)
-  detalles: Detallepedido[];
+  @OneToMany(() => DetallePedido, (detalle) => detalle.plato)
+  detalles: DetallePedido[];
 }

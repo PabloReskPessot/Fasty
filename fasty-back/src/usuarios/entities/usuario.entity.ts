@@ -39,9 +39,9 @@ export class Usuario {
   @OneToMany(() => Pedido, (pedido) => pedido.usuario)
   pedidos: Pedido[];
 
-  @OneToMany(() => ReseniaRestaurante, (resena) => resenia.usuario)
-  resenasRestaurantes: ReseniaRestaurante[];
+  @OneToMany(() => ReseniaRestaurante, (resenia) => resenia.usuario)
+  reseniaRestaurantes: ReseniaRestaurante[];
 
-  @OneToMany(() => ReseniaRepartidor, (resenia) => resena.usuario)
-  reseniasRepartidores: ReseniaRepartidor[];
+  @OneToMany(() => ReseniaRepartidor, (resenia) => resenia.usuario)
+  reseniaRepartidores: ReseniaRepartidor[];
 }
