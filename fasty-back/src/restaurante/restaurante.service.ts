@@ -26,8 +26,17 @@ export class RestauranteService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} restaurante`;
+  async findById(id: number): Promise<Restaurante> {
+    const restaurante = await this.restauranteRepository.findOne({
+      where: { restauranteID: id, activo: true },
+      relations: ['direccionRestaurante', 'administrador', 'platos']
+    });
+
+    if (!restaurante) {
+      throw new NotFoundException(`Restaurante con ID ${id} no encontrado`);
+    }
+
+    return restaurante;
   }
 
   update(id: number, updateRestauranteDto: UpdateRestauranteDto) {

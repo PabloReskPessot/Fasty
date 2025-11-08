@@ -15,3 +15,5 @@ export class MetodoPago {
   @OneToMany(() => Pedido, (pedido) => pedido.metodoPago)
   pedidos: Pedido[];
 }
+
+// tendriamos que crear un metodo de pago cliente, no tiene sentido que este sea global si le vamos a poner predeterminado
