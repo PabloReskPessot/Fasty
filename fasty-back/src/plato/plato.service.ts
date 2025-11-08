@@ -13,6 +13,9 @@ export class PlatoService {
   // return this.platoRepository.save(plato);
   // }
 
+  create(createPlatoDto: CreatePlatoDto) {
+    return 'This action adds a new plato';
+  }
   
 
   findAll() {

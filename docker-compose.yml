@@ -15,9 +15,9 @@ services:
     build: ./fasty-back
     restart: always
     ports:
-      - "3000:3000"
+    - "3000:3000"
     depends_on:
-      - fasty-db
+    - fasty-db
     environment:
       DATABASE_HOST: fasty-db
       DATABASE_PORT: 5432

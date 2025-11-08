@@ -24,7 +24,7 @@ export class Usuario {
   @Column({ nullable: true })
   telefono: string;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   fechaNacimiento: Date;
 
   @Column({ nullable: true })
