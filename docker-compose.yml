@@ -1,6 +1,7 @@
 services:
   fasty-db:
-    image: postgres:15
+    build: ./fasty-db
+    image: fasty-db-custom
     restart: always
     environment:
       POSTGRES_USER: postgres

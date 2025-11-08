@@ -34,3 +34,7 @@ export class Repartidor {
   @OneToMany(() => ReseniaRepartidor, (resenia) => resenia.repartidor)
   resenia: ReseniaRepartidor[];
 }
+
+// ver como gestionar las calificaciones de los repartidores
+// se saca de sumar todas las calificaciones y dividirlas por la cantidad de resenias
+// como se guardaria y cada vez que se agrega una nueva resenia se actualiza?

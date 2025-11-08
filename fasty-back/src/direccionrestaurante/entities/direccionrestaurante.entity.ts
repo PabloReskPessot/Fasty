@@ -15,8 +15,6 @@ export class DireccionRestaurante {
   @Column()
   ciudad: string;
 
-  @Column({ nullable: true })
-  row: string;
 
   @Column({ type: 'decimal', precision: 9, scale: 6, nullable: true })
   latitud: number;

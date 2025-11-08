@@ -25,8 +25,6 @@ export class Descuento {
   @Column({ nullable: true })
   codigo: string;
 
-  @Column({ nullable: true })
-  row: string;
 
   @Column({ default: true })
   activo: boolean;
