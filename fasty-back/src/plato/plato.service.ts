@@ -1,39 +1,78 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Plato } from './entities/plato.entity';
 import { CreatePlatoDto } from './dto/create-plato.dto';
 import { UpdatePlatoDto } from './dto/update-plato.dto';
 
 @Injectable()
 export class PlatoService {
+  constructor(
+    @InjectRepository(Plato)
+    private readonly platoRepository: Repository<Plato>,
+  ) {}
 
-  // esto lo dejo aca para ir adelantando, despues adaptalo a como lo vas a usar, es para que recuerdes que total se calcula cuando creas el plato y es el precio menos el descuento
-  // platos.service.ts
-  // create(dto: CreatePlatoDto) {
-  // const plato = this.platoRepository.create(dto);
-  // plato.total = plato.precio * (1 - plato.porcentajeDescuento / 100);
-  // return this.platoRepository.save(plato);
-  // }
+  // ✅ Crear un nuevo plato
+  async create(createPlatoDto: CreatePlatoDto): Promise<Plato> {
+    // Si el DTO tiene campos como precio y porcentajeDescuento,
+    // podés calcular un campo "total" antes de guardar.
+    const plato = this.platoRepository.create({
+      ...createPlatoDto,
+      total:
+        createPlatoDto.precio &&
+        createPlatoDto.porcentajeDescuento !== undefined
+          ? createPlatoDto.precio * (1 - createPlatoDto.porcentajeDescuento / 100)
+          : createPlatoDto.precio,
+    });
 
-  create(createPlatoDto: CreatePlatoDto) {
-    return 'This action adds a new plato';
-  }
-  
-
-  findAll() {
-    return `This action returns all plato`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} plato`;
-  }
-
-  update(id: number, updatePlatoDto: UpdatePlatoDto) {
-    return `This action updates a #${id} plato`;
+    return this.platoRepository.save(plato);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} plato`;
+  // Listar todos los platos
+  async findAll(): Promise<Plato[]> {
+    return this.platoRepository.find({
+      relations: ['restaurante'], // incluir datos del restaurante si es necesario
+      order: { platoID: 'ASC' },
+    });
   }
 
-  
+  // buscar un plato por ID
+  async findOne(id: number): Promise<Plato> {
+    const plato = await this.platoRepository.findOne({
+      where: { platoID: id },
+      relations: ['restaurante', 'detalles'],
+    });
 
+    if (!plato) {
+      throw new NotFoundException(`Plato ${id} no encontrado`);
+    }
+
+    return plato;
+  }
+
+  // Editar un plato
+  async update(id: number, updatePlatoDto: UpdatePlatoDto): Promise<Plato> {
+    const plato = await this.findOne(id);
+    Object.assign(plato, updatePlatoDto);
+
+    // Si cambian los precios o descuentos, recalculamos el total
+    if (
+      updatePlatoDto.precio !== undefined ||
+      updatePlatoDto.porcentajeDescuento !== undefined
+    ) {
+      const precio = updatePlatoDto.precio ?? plato.precio;
+      const descuento =
+        updatePlatoDto.porcentajeDescuento ?? plato.porcentajeDescuento ?? 0;
+      plato.total = precio * (1 - descuento / 100);
+    }
+
+    return this.platoRepository.save(plato);
+  }
+
+  // Eliminar un plato
+  async remove(id: number): Promise<{ message: string }> {
+    const plato = await this.findOne(id);
+    await this.platoRepository.remove(plato);
+    return { message: `Plato con ID ${id} eliminado correctamente` };
+  }
 }
