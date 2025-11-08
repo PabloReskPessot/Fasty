@@ -8,6 +8,11 @@ services:
       POSTGRES_DB: fasty-db
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
     volumes:
       - fasty_data:/var/lib/postgresql/data
 
@@ -15,9 +20,10 @@ services:
     build: ./fasty-back
     restart: always
     ports:
-      - "3000:3000"
+    - "3000:3000"
     depends_on:
-      - fasty-db
+      fasty-db:
+        condition: service_healthy
     environment:
       DATABASE_HOST: fasty-db
       DATABASE_PORT: 5432

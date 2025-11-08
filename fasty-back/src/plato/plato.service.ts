@@ -12,42 +12,67 @@ export class PlatoService {
     private readonly platoRepository: Repository<Plato>,
   ) {}
 
-  //Crear un nuevo plato
+  // ✅ Crear un nuevo plato
   async create(createPlatoDto: CreatePlatoDto): Promise<Plato> {
-    const plato = this.platoRepository.create(createPlatoDto);
-    return await this.platoRepository.save(plato);
+    // Si el DTO tiene campos como precio y porcentajeDescuento,
+    // podés calcular un campo "total" antes de guardar.
+    const plato = this.platoRepository.create({
+      ...createPlatoDto,
+      total:
+        createPlatoDto.precio &&
+        createPlatoDto.porcentajeDescuento !== undefined
+          ? createPlatoDto.precio * (1 - createPlatoDto.porcentajeDescuento / 100)
+          : createPlatoDto.precio,
+    });
+
+    return this.platoRepository.save(plato);
   }
 
-  //Listar todos los platos
+  // Listar todos los platos
   async findAll(): Promise<Plato[]> {
-    return await this.platoRepository.find({
-      relations: ['restaurante'], // opcional si querés incluir el restaurante
+    return this.platoRepository.find({
+      relations: ['restaurante'], // incluir datos del restaurante si es necesario
+      order: { platoID: 'ASC' },
     });
   }
 
-  // Buscar un plato por ID
+  // buscar un plato por ID
   async findOne(id: number): Promise<Plato> {
     const plato = await this.platoRepository.findOne({
       where: { platoID: id },
-     relations: ['restaurante', 'detalles'],
+      relations: ['restaurante', 'detalles'],
     });
 
     if (!plato) {
-      throw new NotFoundException(`No se encontró el plato ${id}`);
+      throw new NotFoundException(`Plato ${id} no encontrado`);
     }
+
     return plato;
   }
 
-  // editar un plato
+  // Editar un plato
   async update(id: number, updatePlatoDto: UpdatePlatoDto): Promise<Plato> {
     const plato = await this.findOne(id);
     Object.assign(plato, updatePlatoDto);
-    return await this.platoRepository.save(plato);
+
+    // Si cambian los precios o descuentos, recalculamos el total
+    if (
+      updatePlatoDto.precio !== undefined ||
+      updatePlatoDto.porcentajeDescuento !== undefined
+    ) {
+      const precio = updatePlatoDto.precio ?? plato.precio;
+      const descuento =
+        updatePlatoDto.porcentajeDescuento ?? plato.porcentajeDescuento ?? 0;
+      plato.total = precio * (1 - descuento / 100);
+    }
+
+    return this.platoRepository.save(plato);
   }
 
-  // Eliminar (borrado lógico si preferís)
-  async remove(id: number): Promise<void> {
+  // Eliminar un plato
+  async remove(id: number): Promise<{ message: string }> {
     const plato = await this.findOne(id);
     await this.platoRepository.remove(plato);
+    return { message: `Plato con ID ${id} eliminado correctamente` };
   }
 }

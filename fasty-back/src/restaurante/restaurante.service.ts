@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { Restaurante } from './entities/restaurante.entity';
 import { CreateRestauranteDto } from './dto/create-restaurante.dto';
 import { UpdateRestauranteDto } from './dto/update-restaurante.dto';
@@ -49,13 +49,3 @@ export class RestauranteService {
     }
   }
 }
-
-
-  // Buscar restaurantes/tiendas → endpoint con filtros y queries.
-  // Ejemplo: /restaurantes?ciudad=Madrid&tipoComida=Italiana&abiertoAhora=true
-  // Este endpoint debería aceptar varios parámetros opcionales para filtrar los resultados.
-
-  
-//CONTROLAR RELACIONES
-
-

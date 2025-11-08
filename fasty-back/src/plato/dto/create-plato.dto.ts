@@ -1,4 +1,5 @@
-import { IsString, IsNumber, IsOptional, IsBoolean } from 'class-validator';
+// src/plato/dto/create-plato.dto.ts
+import { IsString, IsNumber, IsOptional, Min } from 'class-validator';
 
 export class CreatePlatoDto {
   @IsString()
@@ -6,6 +7,11 @@ export class CreatePlatoDto {
 
   @IsNumber()
   precio: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  porcentajeDescuento?: number;
 
   @IsOptional()
   @IsString()
@@ -16,6 +22,11 @@ export class CreatePlatoDto {
   imagen?: string;
 
   @IsOptional()
-  @IsBoolean()
   activo?: boolean;
+
+  @IsOptional()
+  categoriaId?: number;
+
+  @IsOptional()
+  restauranteId?: number;
 }

@@ -30,7 +30,7 @@ export class Pedido {
   @ManyToOne(() => Descuento, (descuento) => descuento.pedidos, { nullable: true })
   descuento: Descuento;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   fechaPedido: Date;
 
   @Column()

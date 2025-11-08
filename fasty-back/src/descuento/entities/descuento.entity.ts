@@ -16,10 +16,10 @@ export class Descuento {
   @Column({ type: 'decimal', precision: 5, scale: 2 })
   valor: number;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   fechaInicio: Date;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   fechaFin: Date;
 
   @Column({ nullable: true })
