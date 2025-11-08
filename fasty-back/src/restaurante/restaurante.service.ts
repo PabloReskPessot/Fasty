@@ -19,14 +19,14 @@ export class RestauranteService {
 
   async findAll(): Promise<Restaurante[]> {
     return await this.restauranteRepository.find({
-      relations: ['categoria', 'direccionRestaurante', 'administrador', 'platos'],
+      relations: ['categoria', 'direccionRestaurante', 'platos'], where: { activo: true }
     });
   }
 
   async findOne(id: number): Promise<Restaurante> {
     const restaurante = await this.restauranteRepository.findOne({
       where: { restauranteID: id },
-      relations: ['categoria', 'direccionRestaurante', 'administrador', 'platos'],
+      relations: ['categoria', 'direccionRestaurante', 'platos'],
     });
 
     if (!restaurante) {
@@ -34,6 +34,59 @@ export class RestauranteService {
     }
 
     return restaurante;
+  }
+
+  async findByName(nombre: string): Promise<Restaurante[]> {
+    return this.restauranteRepository.find({
+      where: {
+        nombre: Like(`%${nombre}%`),
+        activo: true
+      },
+      relations: ['categoria','direccionRestaurante', 'platos']
+    });
+  }
+
+  async findByCategoria(categoriaId: number): Promise<Restaurante[]> {
+    return this.restauranteRepository.find({
+      where: { categoria: { categoriaRestauranteID: categoriaId }, activo: true },
+      relations: ['categoria', 'direccionRestaurante','platos']
+    });
+  }
+
+  async getMenuCompleto(restauranteId: number): Promise<any> {
+    const restaurante = await this.restauranteRepository.findOne({
+      where: { restauranteID: restauranteId, activo: true },
+      relations: [
+        'platos',
+        'platos.categoria',
+        'direccionRestaurante'
+      ]
+    });
+
+    if (!restaurante) {
+      throw new NotFoundException(`Restaurante con ID ${restauranteId} no encontrado`);
+    }
+
+    // Agrupar platos por categoría
+    const menuPorCategoria = {};
+    restaurante.platos
+      .filter(plato => plato.activo)
+      .forEach(plato => {
+        const categoriaNombre = plato.categoria.tipoComida;
+        if (!menuPorCategoria[categoriaNombre]) {
+          menuPorCategoria[categoriaNombre] = [];
+        }
+        menuPorCategoria[categoriaNombre].push(plato);
+      });
+
+    return {
+      restaurante: {
+        id: restaurante.restauranteID,
+        nombre: restaurante.nombre,
+        direccion: restaurante.direccionRestaurante
+      },
+      menu: menuPorCategoria
+    };
   }
 
   async update(id: number, updateRestauranteDto: UpdateRestauranteDto): Promise<Restaurante> {
