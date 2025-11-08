@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { Restaurante } from '../../restaurante/entities/restaurante.entity';
 import { DetallePedido } from '../../detallepedido/entities/detallepedido.entity';
+import { Categoria } from 'src/categoria/entities/categoria.entity';
 
 @Entity()
 export class Plato {
@@ -13,6 +14,12 @@ export class Plato {
   @Column()
   precio: number;
 
+  @Column('decimal', { precision: 5, scale: 2, default: 0 })
+  porcentajeDescuento: number;
+
+  @Column('decimal', { precision: 10, scale: 2 })
+  total: number;
+
   @Column({ nullable: true })
   imagen: string;
 
@@ -21,6 +28,10 @@ export class Plato {
 
   @Column({ default: true })
   activo: boolean;
+
+  @ManyToOne(() => Categoria, (categoria) => categoria.platos, { eager: true })
+  @JoinColumn({ name: 'categoriaId' })
+  categoria: Categoria;
 
   @ManyToOne(() => Restaurante, (restaurante) => restaurante.platos)
   restaurante: Restaurante;
