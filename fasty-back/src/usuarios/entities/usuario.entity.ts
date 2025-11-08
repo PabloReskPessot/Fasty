@@ -3,6 +3,7 @@ import { Direccion } from '../../direccion/entities/direccion.entity';
 import { Pedido } from '../../pedido/entities/pedido.entity';
 import { ReseniaRestaurante } from '../../resenia-restaurante/entities/resenia-restaurante.entity';
 import { ReseniaRepartidor } from '../../resenia-repartidor/entities/resenia-repartidor.entity';
+import { MetodoPago } from 'src/metodopago/entities/metodopago.entity';
 
 @Entity()
 export class Usuario {
@@ -44,4 +45,7 @@ export class Usuario {
 
   @OneToMany(() => ReseniaRepartidor, (resenia) => resenia.usuario)
   reseniaRepartidores: ReseniaRepartidor[];
+
+  @OneToMany(() => MetodoPago, (metodoPago) => metodoPago.usuario)
+  metodosPago: MetodoPago[];
 }

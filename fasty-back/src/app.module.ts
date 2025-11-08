@@ -19,6 +19,7 @@ import { DireccionModule } from './direccion/direccion.module';
 import { ConfigModule } from '@nestjs/config';
 import { ReseniaRestauranteModule } from './resenia-restaurante/resenia-restaurante.module';
 import { DireccionRestauranteModule } from './direccionrestaurante/direccionrestaurante.module';
+import { MetodoPagoDisponibleModule } from './metodopagodisponible/metodopagodisponible.module';
 
 
 
@@ -50,6 +51,7 @@ import { DireccionRestauranteModule } from './direccionrestaurante/direccionrest
     ReseniaRepartidorModule,
     ReseniaRestauranteModule,
     DireccionRestauranteModule,
+    MetodoPagoDisponibleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
