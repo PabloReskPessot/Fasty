@@ -1,34 +1,61 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Restaurante } from './entities/restaurante.entity';
 import { CreateRestauranteDto } from './dto/create-restaurante.dto';
 import { UpdateRestauranteDto } from './dto/update-restaurante.dto';
 
 @Injectable()
 export class RestauranteService {
-  create(createRestauranteDto: CreateRestauranteDto) {
-    return 'This action adds a new restaurante';
+  constructor(
+    @InjectRepository(Restaurante)
+    private readonly restauranteRepository: Repository<Restaurante>,
+  ) {}
+
+  async create(createRestauranteDto: CreateRestauranteDto): Promise<Restaurante> {
+    const restaurante = this.restauranteRepository.create(createRestauranteDto);
+    return await this.restauranteRepository.save(restaurante);
   }
 
-  findAll() {
-    return `This action returns all restaurante`;
+  async findAll(): Promise<Restaurante[]> {
+    return await this.restauranteRepository.find({
+      relations: ['categoria', 'direccionRestaurante', 'administrador', 'platos'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} restaurante`;
+  async findOne(id: number): Promise<Restaurante> {
+    const restaurante = await this.restauranteRepository.findOne({
+      where: { restauranteID: id },
+      relations: ['categoria', 'direccionRestaurante', 'administrador', 'platos'],
+    });
+
+    if (!restaurante) {
+      throw new NotFoundException(`Restaurante con ID ${id} no encontrado`);
+    }
+
+    return restaurante;
   }
 
-  update(id: number, updateRestauranteDto: UpdateRestauranteDto) {
-    return `This action updates a #${id} restaurante`;
+  async update(id: number, updateRestauranteDto: UpdateRestauranteDto): Promise<Restaurante> {
+    const restaurante = await this.findOne(id);
+    Object.assign(restaurante, updateRestauranteDto);
+    return await this.restauranteRepository.save(restaurante);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} restaurante`;
+  async remove(id: number): Promise<void> {
+    const result = await this.restauranteRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Restaurante con ID ${id} no encontrado`);
+    }
   }
+}
+
 
   // Buscar restaurantes/tiendas → endpoint con filtros y queries.
   // Ejemplo: /restaurantes?ciudad=Madrid&tipoComida=Italiana&abiertoAhora=true
   // Este endpoint debería aceptar varios parámetros opcionales para filtrar los resultados.
 
   
+//CONTROLAR RELACIONES
 
 
-}
