@@ -18,26 +18,9 @@ export class RestauranteService {
     return 'This action adds a new restaurante';
   }
 
-  // devuelve todos los restaurantes activos, y tambien te trae la direccion y el administrador relacionado , y todos los platos
-  async findAll(): Promise<Restaurante[]> {
-    return this.restauranteRepository.find({
-      relations: ['direccionRestaurante', 'administrador', 'platos'],
-      where: { activo: true }
-    });
-  }
 
-  async findById(id: number): Promise<Restaurante> {
-    const restaurante = await this.restauranteRepository.findOne({
-      where: { restauranteID: id, activo: true },
-      relations: ['direccionRestaurante', 'administrador', 'platos']
-    });
 
-    if (!restaurante) {
-      throw new NotFoundException(`Restaurante con ID ${id} no encontrado`);
-    }
 
-    return restaurante;
-  }
 
   update(id: number, updateRestauranteDto: UpdateRestauranteDto) {
     return `This action updates a #${id} restaurante`;
