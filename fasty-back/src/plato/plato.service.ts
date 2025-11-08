@@ -12,7 +12,7 @@ export class PlatoService {
     private readonly platoRepository: Repository<Plato>,
   ) {}
 
-  // ✅ Crear un nuevo plato
+  // Crear un nuevo plato
   async create(createPlatoDto: CreatePlatoDto): Promise<Plato> {
     // Si el DTO tiene campos como precio y porcentajeDescuento,
     // podés calcular un campo "total" antes de guardar.
@@ -46,7 +46,6 @@ export class PlatoService {
     if (!plato) {
       throw new NotFoundException(`Plato ${id} no encontrado`);
     }
-
     return plato;
   }
 
