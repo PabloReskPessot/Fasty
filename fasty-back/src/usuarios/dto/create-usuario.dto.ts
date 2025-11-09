@@ -1,31 +1,37 @@
-import { IsString, IsEmail, IsBoolean, IsDateString, IsOptional, Length } from 'class-validator';
-import { Type } from 'class-transformer';
+import {
+  IsString,
+  IsEmail,
+  IsBoolean,
+  IsDateString,
+  IsOptional,
+  Length,
+} from 'class-validator';
 
 export class CreateUsuarioDto {
-    @IsOptional()
-    id?: number;
+  @IsString()
+  @Length(1, 100)
+  nombre: string;
 
-    @IsString()
-    @Length(1, 100)
-    nombre: string;
+  @IsString()
+  @Length(1, 100)
+  apellido: string;
 
-    @IsString()
-    @Length(1, 100)
-    apellido: string;
+  @IsEmail()
+  email: string;
 
-    @IsEmail()
-    email: string;
+  @IsString()
+  @Length(6, 128)
+  contrasena: string;
 
-    @IsString()
-    @Length(6, 128)
-    password: string;
+  @IsOptional()
+  @IsDateString()
+  fechaNacimiento?: string;
 
-    @IsDateString()
-    fechaNacimiento: string; // use ISO date string in requests
+  @IsOptional()
+  @IsString()
+  genero?: string;
 
-    @IsString()
-    genero: string;
-
-    @IsBoolean()
-    activo: boolean;
+  @IsOptional()
+  @IsBoolean()
+  activo?: boolean;
 }

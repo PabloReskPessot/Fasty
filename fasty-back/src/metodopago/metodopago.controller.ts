@@ -3,7 +3,7 @@ import { MetodopagoService } from './metodopago.service';
 import { CreateMetodopagoDto } from './dto/create-metodopago.dto';
 import { UpdateMetodopagoDto } from './dto/update-metodopago.dto';
 
-@Controller('metodopago')
+@Controller('metodo-pago')
 export class MetodopagoController {
   constructor(private readonly metodopagoService: MetodopagoService) {}
 

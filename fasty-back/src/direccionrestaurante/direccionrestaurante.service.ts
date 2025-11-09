@@ -1,26 +1,75 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { DireccionRestaurante } from './entities/direccionrestaurante.entity';
 import { CreateDireccionrestauranteDto } from './dto/create-direccionrestaurante.dto';
 import { UpdateDireccionrestauranteDto } from './dto/update-direccionrestaurante.dto';
+import { Restaurante } from '../restaurante/entities/restaurante.entity';
 
 @Injectable()
 export class DireccionrestauranteService {
-  create(createDireccionrestauranteDto: CreateDireccionrestauranteDto) {
-    return 'This action adds a new direccionrestaurante';
+  constructor(
+    @InjectRepository(DireccionRestaurante)
+    private readonly direccionRestauranteRepository: Repository<DireccionRestaurante>,
+
+    @InjectRepository(Restaurante)
+    private readonly restauranteRepository: Repository<Restaurante>,
+  ) {}
+
+  //crear
+  async create(createDireccionrestauranteDto: CreateDireccionrestauranteDto) {
+    const direccion = this.direccionRestauranteRepository.create(createDireccionrestauranteDto);
+
+    if (createDireccionrestauranteDto.restauranteId) {
+      const restaurante = await this.restauranteRepository.findOne({
+        where: { restauranteID: createDireccionrestauranteDto.restauranteId },
+      });
+      if (!restaurante) throw new NotFoundException('Restaurante no encontrado');
+      direccion.restaurante = restaurante;
+    }
+
+    return this.direccionRestauranteRepository.save(direccion);
   }
 
+  //listar 
   findAll() {
-    return `This action returns all direccionrestaurante`;
+    return this.direccionRestauranteRepository.find({
+      relations: ['restaurante'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} direccionrestaurante`;
+  //buscar por id
+  async findOne(id: number) {
+    const direccion = await this.direccionRestauranteRepository.findOne({
+      where: { direccionRestauranteID: id },
+      relations: ['restaurante'],
+    });
+    if (!direccion) {
+      throw new NotFoundException(`Dirección de restaurante ${id} no encontrada`);
+    }
+    return direccion;
   }
 
-  update(id: number, updateDireccionrestauranteDto: UpdateDireccionrestauranteDto) {
-    return `This action updates a #${id} direccionrestaurante`;
+  //editar
+  async update(id: number, updateDireccionrestauranteDto: UpdateDireccionrestauranteDto) {
+    const direccion = await this.findOne(id);
+
+    Object.assign(direccion, updateDireccionrestauranteDto);
+
+    if (updateDireccionrestauranteDto.restauranteId) {
+      const restaurante = await this.restauranteRepository.findOne({
+        where: { restauranteID: updateDireccionrestauranteDto.restauranteId },
+      });
+      if (!restaurante) throw new NotFoundException('Restaurante no encontrado');
+      direccion.restaurante = restaurante;
+    }
+
+    return this.direccionRestauranteRepository.save(direccion);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} direccionrestaurante`;
+  //eliminar
+  async remove(id: number) {
+    const direccion = await this.findOne(id);
+    return this.direccionRestauranteRepository.remove(direccion);
   }
 }
