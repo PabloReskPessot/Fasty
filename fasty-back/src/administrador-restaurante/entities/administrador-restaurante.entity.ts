@@ -6,8 +6,8 @@ export class AdministradorRestaurante {
   @PrimaryGeneratedColumn()
   administradorRestauranteID: number;
 
-  @OneToOne(() => Restaurante, (restaurante) => restaurante.administrador)
-  @JoinColumn()
+  @OneToOne(() => Restaurante, restaurante => restaurante.administrador)
+  @JoinColumn({ name: 'restauranteID' })
   restaurante: Restaurante;
 
   @Column()

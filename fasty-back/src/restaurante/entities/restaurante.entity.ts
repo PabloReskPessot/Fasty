@@ -3,6 +3,7 @@ import { DireccionRestaurante } from '../../direccionrestaurante/entities/direcc
 import { CategoriaRestaurante } from '../../categoriarestaurante/entities/categoriarestaurante.entity';
 import { AdministradorRestaurante } from '../../administrador-restaurante/entities/administrador-restaurante.entity';
 import { Plato } from '../../plato/entities/plato.entity';
+import { ReseniaRestaurante } from 'src/resenia-restaurante/entities/resenia-restaurante.entity';
 
 @Entity()
 export class Restaurante {
@@ -45,4 +46,9 @@ export class Restaurante {
 
   @OneToMany(() => Plato, (plato) => plato.restaurante)
   platos: Plato[];
+
+  @OneToMany(() => ReseniaRestaurante, (resenia) => resenia.restaurante)
+  reseniaRestaurantes: ReseniaRestaurante[];
+
+  
 }

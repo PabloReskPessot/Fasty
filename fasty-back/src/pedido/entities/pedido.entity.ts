@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { Usuario } from '../../usuarios/entities/usuario.entity';
 import { Direccion } from '../../direccion/entities/direccion.entity';
 import { DireccionRestaurante } from '../../direccionrestaurante/entities/direccionrestaurante.entity';
@@ -12,22 +12,28 @@ export class Pedido {
   @PrimaryGeneratedColumn()
   pedidoID: number;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.pedidos)
+  @ManyToOne(() => Usuario, usuario => usuario.pedidos)
+  @JoinColumn({ name: 'usuarioID' })
   usuario: Usuario;
 
   @ManyToOne(() => Direccion, { nullable: true })
+  @JoinColumn({ name: 'direccionID' })
   direccion: Direccion;
 
   @ManyToOne(() => DireccionRestaurante, { nullable: true })
+  @JoinColumn({ name: 'direccionRestauranteID' })
   direccionRestaurante: DireccionRestaurante;
 
-  @ManyToOne(() => Repartidor, (repartidor) => repartidor.pedidos, { nullable: true })
+  @ManyToOne(() => Repartidor, repartidor => repartidor.pedidos, { nullable: true })
+  @JoinColumn({ name: 'repartidorID' })
   repartidor: Repartidor;
 
   @ManyToOne(() => MetodoPago, (metodo) => metodo.pedidos)
+  @JoinColumn({ name: 'metodoPagoID' })
   metodoPago: MetodoPago;
 
   @ManyToOne(() => Descuento, (descuento) => descuento.pedidos, { nullable: true })
+  @JoinColumn({ name: 'descuentoID' })
   descuento: Descuento;
 
   @Column({ type: 'timestamp' })
@@ -36,21 +42,21 @@ export class Pedido {
   @Column()
   estado: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 12, scale: 2  })
   subtotal: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal',  precision: 12, scale: 2 })
   costoEnvio: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  @Column({ type: 'decimal', precision: 12, scale: 2, nullable: true })
   impuesto: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 12, scale: 2 })
   total: number;
 
   @Column({ nullable: true })
   codigoSeguimiento: string;
 
-  @OneToMany(() => DetallePedido, (detalle) => detalle.pedido)
-  detalles: DetallePedido[];
+  @OneToMany(() => DetallePedido, (detalle) => detalle.pedido, { cascade: true }) // Cascade para que al crear un pedido se creen tambien los detalles, lo sugirio el chat
+detalles: DetallePedido[];
 }

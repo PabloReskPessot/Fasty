@@ -12,9 +12,6 @@ export class MetodoPago {
   @JoinColumn({ name: 'usuarioID' })
   usuario: Usuario;
 
-  @Column()
-  usuarioID: number;
-
   @Column({ default: false })
   predeterminado: boolean;
 

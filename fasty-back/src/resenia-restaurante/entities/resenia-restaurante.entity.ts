@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Usuario } from '../../usuarios/entities/usuario.entity';
 import { Restaurante } from '../../restaurante/entities/restaurante.entity';
 
@@ -7,10 +7,12 @@ export class ReseniaRestaurante {
   @PrimaryGeneratedColumn()
   reseniaRestauranteID: number;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.reseniaRestaurantes)
+  @ManyToOne(() => Usuario, usuario => usuario.reseniaRestaurantes)
+  @JoinColumn({ name: 'usuarioID' })
   usuario: Usuario;
 
-  @ManyToOne(() => Restaurante, (restaurante) => restaurante)
+  @ManyToOne(() => Restaurante, (restaurante) => restaurante.reseniaRestaurantes)
+  @JoinColumn({ name: 'restauranteID' })
   restaurante: Restaurante;
 
   @Column()

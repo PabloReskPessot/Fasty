@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Usuario } from '../../usuarios/entities/usuario.entity';
 
 @Entity()
@@ -6,7 +6,8 @@ export class Direccion {
   @PrimaryGeneratedColumn()
   direccionID: number;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.direcciones, { nullable: true })
+  @ManyToOne(() => Usuario, usuario => usuario.direcciones)
+  @JoinColumn({ name: 'usuarioID' })
   usuario: Usuario;
 
   @Column()

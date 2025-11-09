@@ -14,10 +14,10 @@ export class Plato {
   @Column()
   precio: number;
 
-  @Column('decimal', { precision: 5, scale: 2, default: 0 })
+  @Column('decimal', {  precision: 12, scale: 2, default: 0 })
   porcentajeDescuento: number;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', { precision: 12, scale: 2 })
   total: number;
 
   @Column({ nullable: true })
@@ -33,7 +33,8 @@ export class Plato {
   @JoinColumn({ name: 'categoriaId' })
   categoria: Categoria;
 
-  @ManyToOne(() => Restaurante, (restaurante) => restaurante.platos)
+  @ManyToOne(() => Restaurante, restaurante => restaurante.platos)
+  @JoinColumn({ name: 'restauranteID' })
   restaurante: Restaurante;
 
   @OneToMany(() => DetallePedido, (detalle) => detalle.plato)

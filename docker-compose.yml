@@ -16,6 +16,8 @@ services:
       retries: 10
     volumes:
       - fasty_data:/var/lib/postgresql/data
+      - ./fasty-db/seed:/seed
+      
 
   fasty-back:
     build: ./fasty-back
@@ -41,7 +43,22 @@ services:
     environment:
       VITE_API_URL: http://fasty-back:3000
 
+
+  fasty-seeder:
+    image: fasty-db-custom
+    depends_on:
+    - fasty-db
+    - fasty-back
+    command: ["/wait/wait-for-it.sh", "fasty-back:3000", "--", "/seed.sh"]
+    volumes:
+    - ./fasty-db/seed:/seed
+
 volumes:
   fasty_data:
 
 
+## como es el flujo de los contenedores ? 
+# 1. se levanta fasty-db, vacio sin datos
+# 2. se levanta fasty-back cuando fasty-db esta listo
+# 3. se levanta fasty-seed cuando fasty-back esta listo, lo que hace la siembra de datos
+# 4. se levanta fasty-front cuando fasty-back esta listo

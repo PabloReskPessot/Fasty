@@ -13,7 +13,7 @@ export class Descuento {
   @Column()
   tipo: string;
 
-  @Column({ type: 'decimal', precision: 5, scale: 2 })
+  @Column({ type: 'decimal', precision: 12, scale: 2 })
   valor: number;
 
   @Column({ type: 'timestamp' })
