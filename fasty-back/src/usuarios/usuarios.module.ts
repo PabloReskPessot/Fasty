@@ -10,4 +10,4 @@ import { UsuariosController } from './usuarios.controller';
   providers: [UsuariosService],
   exports: [TypeOrmModule],
 })
-export class UsuarioModule {}
+export class UsuariosModule {} // ← plural, para mantener consistencia
