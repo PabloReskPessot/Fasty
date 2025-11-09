@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsuarioModule } from './usuarios/usuarios.module';
+import { UsuariosModule } from './usuarios/usuarios.module';
 import { ReseniaRepartidorModule } from './resenia-repartidor/resenia-repartidor.module';
 import { RepartidorModule } from './repartidor/repartidor.module';
 import { AdministradorBackofficeModule } from './administrador-backoffice/administrador-backoffice.module';
@@ -36,7 +36,7 @@ import { MetodoPagoDisponibleModule } from './metodopagodisponible/metodopagodis
       database: process.env.DATABASE_NAME,
       autoLoadEntities: true,
       synchronize: true,
-    }),  UsuarioModule,
+    }),  UsuariosModule,
     DireccionModule,
     RepartidorModule,
     PedidoModule,
