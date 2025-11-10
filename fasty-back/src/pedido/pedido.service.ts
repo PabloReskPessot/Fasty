@@ -14,6 +14,9 @@ import { Pedido } from './entities/pedido.entity';
 import { randomUUID } from 'crypto';
 
 
+
+// pedido delivery, se separo la logica de pedido retiro en local para mayor claridad
+
 @Injectable()
 export class PedidoService {
   constructor(private readonly dataSource: DataSource) {}
@@ -22,30 +25,26 @@ export class PedidoService {
     if (!createPedidoDto.items?.length) throw new BadRequestException('El carrito está vacío'); // validamos que no este vacio el carrito
 
     return await this.dataSource.transaction(async (manager) => {
+      
       // confirmar que el usuario existe
       const usuario = await manager.findOneByOrFail(Usuario,{ usuarioID: createPedidoDto.usuarioId });
-      
+      if (!usuario) throw new NotFoundException('Usuario no encontrado'); // el chat dice que con findOneByOrFail ya tira excepcion, pero por las dudas
 
-      // si viene direccionId, confirmar que la direccion existe y pertenece al usuario, sino es retiro en local
-      let direccion: Direccion | null = null;
-      if (createPedidoDto.direccionId) {
-        direccion = await manager.findOne(Direccion, {
-          where: { direccionID: createPedidoDto.direccionId },
-          relations: ['usuario'], // aseguramos de que trae la relacion con usuario
-        });
-        if (!direccion || direccion.usuario?.usuarioID !== createPedidoDto.usuarioId) { // si no existe o no pertenece al usuario
-          throw new BadRequestException('La dirección no pertenece al usuario');
-        }
+      // confirmar que la direccion existe y pertenece al usuario
+      const direccion = await manager.findOne(Direccion, {
+        where: { direccionID: createPedidoDto.direccionId },
+        relations: ['usuario'],
+      });
+      if (!direccion) throw new NotFoundException('Dirección no encontrada');
+      if (direccion.usuario?.usuarioID !== createPedidoDto.usuarioId) {
+        throw new BadRequestException('La dirección no pertenece al usuario');
       }
-      // misma logica que direccion,
-      // se podria reciclar esta validacion, pero requerria complicarla para cuando es id restaurante y cuando es usuario, por ahora lo dejo asi
-      let direccionRestaurante: DireccionRestaurante | null = null;
-      if (createPedidoDto.direccionRestauranteId) {
-        direccionRestaurante = await manager.findOne(DireccionRestaurante, {
-          where: { direccionRestauranteID: createPedidoDto.direccionRestauranteId },
-        });
-        if (!direccionRestaurante) throw new BadRequestException('Dirección del restaurante inválida');
-      }
+
+      // confirmar que la direccion del restaurante exista
+      const direccionRestaurante = await manager.findOneByOrFail(
+        DireccionRestaurante,
+        { direccionRestauranteID: createPedidoDto.direccionRestauranteId }
+      );
 
       // confirmamos metodo de pago, 
       const metodoPago = await manager.findOne(MetodoPago, {
@@ -58,7 +57,10 @@ export class PedidoService {
 
       // confirmamos que los platos existan usando el items en el dto
       const idsPlatos = [...new Set(createPedidoDto.items.map(i => i.platoId))]; // usamos Set para evitar ids repetidos, esto no sabia que funcionaba asi me lo tiro el chat como recomendacion
-      const platos = await manager.findByIds(Plato, idsPlatos); // obtenemos los platos de la base de datos
+      const platos = await manager.find(Plato, {
+        where: idsPlatos.map(id => ({ platoID: id })),
+      }); // obtenemos los platos de la base de datos
+
       if (platos.length !== idsPlatos.length) {
         throw new BadRequestException('Hay platos inexistentes en el carrito'); // si platos cant != idsPlatos cant, es porque alguno no existia
       }
@@ -86,19 +88,16 @@ export class PedidoService {
         detalles.push(detalle); // guardamos el detalle en el array
       }
 
-
-      let descuentoPedido: Descuento | null = null; // si viene codigo de descuento, validarlo y calcular el descuento
+      const descuentoPedido = await manager.findOneByOrFail(Descuento, {
+        codigo: createPedidoDto.codigoDescuento,
+        activo: true,
+      });
       let valorDescuentoPedido = 0;
-      if (createPedidoDto.codigoDescuento) {
-        descuentoPedido = await manager.findOne(Descuento, { //
-          where: { codigo: createPedidoDto.codigoDescuento, activo: true }, // traendo el descuento que coincida con el codigo y que este activo
-        });
-        if (!descuentoPedido) throw new BadRequestException('Código de descuento inválido');
-
-        const now = new Date();
-        if (descuentoPedido.fechaInicio > now || descuentoPedido.fechaFin < now) {
-          throw new BadRequestException('El código de descuento no está vigente');
-        }
+      
+      const now = new Date();
+      if (descuentoPedido.fechaInicio > now || descuentoPedido.fechaFin < now) {
+        throw new BadRequestException('El descuento no está vigente');
+      }
 
         // tipo tiene textual lo que esta en la base de datos, a lo mejor hay otra forma no tan rustica, pero por ahora lo dejo asi
         // por ej 2x1, descuentopedido.valor = 50.00
@@ -107,7 +106,7 @@ export class PedidoService {
         } else if (descuentoPedido.tipo === 'Fijo') {
           valorDescuentoPedido = Number(Math.min(subtotal, Number(descuentoPedido.valor)).toFixed(2)); // La línea de código calcula el descuento a aplicar, limitándolo al valor del subtotal, y lo almacena como un número con dos decimales.
         } // otra cosa que no sabia y me ensenio el chat
-      }
+      
       
 
       const costoEnvio = Number(createPedidoDto.costoEnvio ?? 0); // eso hay que ver como se gestiona, por ahora lo dejo asi, con la posibilidad de nulos, porque habra dias que sea envio gratis o el costo envio lo calculara por zonas
@@ -115,29 +114,50 @@ export class PedidoService {
       const impuesto = 0; // no se si hay impuesto eso es muy adelantado, por ahora paraiso fiscal 
       const total = Number((imponible + costoEnvio + impuesto).toFixed(2));
 
-      // 5) Crear pedido con totales y detalles
-      const pedido = manager.create(Pedido, {
-        usuario,
-        direccion: direccion ?? null,
-        direccionRestaurante: direccionRestaurante ?? null,
-        metodoPago,
-        descuento: descuentoPedido ?? null,
-        fechaPedido: new Date(), // ver si no da problemas 
-        estado: 'Ingresado',                           // Ingresado -> EsperandoDelivery  -> EnCamino -> Entregado // Cancelado
-        subtotal: Number(subtotal.toFixed(2)),
-        costoEnvio,
-        impuesto,
-        total,
-        codigoSeguimiento: randomUUID().slice(0, 8), // corto/legible
-        detalles,                                     // gracias a cascade: true
-      });
+      // TYPEORM me empezo a dar problemas al cargarlo asi, algo con el overload de create, asi que lo hice de la forma clasica
+
+      // const pedido = manager.create<Pedido, DeepPartial<Pedido>>(Pedido, {
+      //   usuario,
+      //   direccion: direccion ?? null,
+      //   direccionRestaurante: direccionRestaurante ?? null,
+      //   metodoPago,
+      //   descuento: descuentoPedido ?? null,
+      //   fechaPedido: new Date(), // ver si no da problemas 
+      //   estado: 'Ingresado',                           // Ingresado -> EsperandoDelivery  -> EnCamino -> Entregado // Cancelado
+      //   subtotal: Number(subtotal.toFixed(2)),
+      //   costoEnvio,
+      //   impuesto,
+      //   total,
+      //   codigoSeguimiento: randomUUID().slice(0, 8), // corto/legible
+      //   detalles,                                     // gracias a cascade: true
+      // });
+
+
+      const pedido = manager.create(Pedido);
+
+      pedido.usuario = usuario;
+      pedido.direccion = direccion;
+      pedido.direccionRestaurante = direccionRestaurante ?? null;
+      pedido.metodoPago = metodoPago;
+      pedido.descuento = descuentoPedido ?? null;
+      pedido.fechaPedido = new Date();
+      pedido.estado = 'Ingresado';
+      pedido.subtotal = Number(subtotal.toFixed(2));
+      pedido.costoEnvio = costoEnvio;
+      pedido.impuesto = impuesto;
+      pedido.total = total;
+      pedido.codigoSeguimiento = randomUUID().slice(0, 8);
+      pedido.detalles = detalles;
+
+
+
 
       // Persistir todo junto
       const saved = await manager.save(pedido);
       return saved; // incluye detalles si tienes eager, si no, expón vía GET/:id con relations
     });
   }
-  }
+
 
   findAll() {
     return `This action returns all pedido`;
@@ -155,3 +175,48 @@ export class PedidoService {
     return `This action removes a #${id} pedido`;
   }
 }
+
+
+
+
+// ============================================ esto lo teniamos cuando permitiamos que la direccion sea opcional, osea que sea null cuando era retiro local 
+// se saco porque ya no lo tenemos asi, ahora este pedido es el de delivery
+
+// // si viene direccionId, confirmar que la direccion existe y pertenece al usuario, sino es retiro en local
+      //   const direccion = await manager.findOneByOrFail(Direccion, {
+      //   direccionID: createPedidoDto.direccionId,
+      //   });
+      // if (createPedidoDto.direccionId) {
+      //   direccion = await manager.findOne(Direccion, {
+      //     where: { direccionID: createPedidoDto.direccionId },
+      //     relations: ['usuario'], // aseguramos de que trae la relacion con usuario
+      //   });
+      //   if (!direccion || direccion.usuario?.usuarioID !== createPedidoDto.usuarioId) { // si no existe o no pertenece al usuario
+      //     throw new BadRequestException('La dirección no pertenece al usuario');
+      //   }
+      // }
+
+
+
+// misma logica que direccion,
+// se podria reciclar esta validacion, pero requerria complicarla para cuando es id restaurante y cuando es usuario, por ahora lo dejo asi
+      // let direccionRestaurante: DireccionRestaurante | null = null;
+      // if (createPedidoDto.direccionRestauranteId) {
+      //   direccionRestaurante = await manager.findOne(DireccionRestaurante, {
+      //     where: { direccionRestauranteID: createPedidoDto.direccionRestauranteId },
+      //   });
+      //   if (!direccionRestaurante) throw new BadRequestException('Dirección del restaurante inválida');
+      // }
+
+// descuento
+      // let descuentoPedido: Descuento | null = null; // si viene codigo de descuento, validarlo y calcular el descuento
+      // if (createPedidoDto.codigoDescuento) {
+      //   descuentoPedido = await manager.findOne(Descuento, { //
+      //     where: { codigo: createPedidoDto.codigoDescuento, activo: true }, // traendo el descuento que coincida con el codigo y que este activo
+      //   });
+      //   if (!descuentoPedido) throw new BadRequestException('Código de descuento inválido');
+
+      // const now = new Date();
+      //   if (descuentoPedido.fechaInicio > now || descuentoPedido.fechaFin < now) {
+      //     throw new BadRequestException('El código de descuento no está vigente');
+      //   }
