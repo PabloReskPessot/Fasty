@@ -12,7 +12,7 @@ export class Pedido {
   @PrimaryGeneratedColumn()
   pedidoID: number;
 
-  @ManyToOne(() => Usuario, usuario => usuario.pedidos)
+  @ManyToOne(() => Usuario, usuario => usuario.pedidos, { nullable: false })
   @JoinColumn({ name: 'usuarioID' })
   usuario: Usuario;
 
