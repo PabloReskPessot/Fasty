@@ -2,6 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PedidoService } from './pedido.service';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
+import { UpdateEstadoDto } from './dto/update-estado.dto';
+import { Query } from '@nestjs/common/decorators';
 
 // en el front se arma un carrito en memoria que guarda los items y se envia todo a la creacion de pedido
 
@@ -27,9 +29,19 @@ export class PedidoController {
     return this.pedidoService.findOne(+id);
   }
 
+  @Get()
+  findByUsuario(@Query('usuarioId') usuarioId: string) {
+    return this.pedidoService.findByUsuario(+usuarioId);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePedidoDto: UpdatePedidoDto) {
     return this.pedidoService.update(+id, updatePedidoDto);
+  }
+
+  @Patch(':id/estado')
+  updateEstado(@Param('id') id: string, @Body() dto: UpdateEstadoDto) {
+    return this.pedidoService.updateEstado(+id, dto.estado);
   }
 
   @Delete(':id')

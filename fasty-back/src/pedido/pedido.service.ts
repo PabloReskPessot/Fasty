@@ -12,7 +12,7 @@ import { DetallePedido } from 'src/detallepedido/entities/detallepedido.entity';
 import { Descuento } from 'src/descuento/entities/descuento.entity';
 import { Pedido } from './entities/pedido.entity';
 import { randomUUID } from 'crypto';
-
+import { UpdateEstadoDto } from './dto/update-estado.dto';
 
 
 // pedido delivery, se separo la logica de pedido retiro en local para mayor claridad
@@ -163,12 +163,46 @@ export class PedidoService {
     return `This action returns all pedido`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} pedido`;
+  async findOne(pedidoId: number) {
+    const pedido = await this.dataSource.getRepository(Pedido).findOne({
+      where: { pedidoID: pedidoId },
+      relations: [
+        'usuario',
+        'direccion',
+        'direccionRestaurante',
+        'metodoPago',
+        'descuento',
+        'detalles',
+        'detalles.plato',
+        'detalles.plato.categoria',
+        'detalles.plato.restaurante',
+      ],
+    });
+    if (!pedido) throw new NotFoundException('Pedido no encontrado');
+    return pedido;
   }
+
+  async findByUsuario(usuarioId: number) {
+  return this.dataSource.getRepository(Pedido).find({
+    where: { usuario: { usuarioID: usuarioId } },
+    order: { fechaPedido: 'DESC' },
+    relations: ['detallepedido', 'detallepedido.plato'],
+  });
+  }
+
+
 
   update(id: number, updatePedidoDto: UpdatePedidoDto) {
     return `This action updates a #${id} pedido`;
+  }
+
+  async updateEstado(pedidoId: number, estado: UpdateEstadoDto['estado']) {
+  const repo = this.dataSource.getRepository(Pedido);
+  const pedido = await repo.findOne({ where: { pedidoID: pedidoId } }); // validamos que el pedido exista
+  if (!pedido) throw new NotFoundException('Pedido no encontrado');
+
+  pedido.estado = estado;
+  return repo.save(pedido);
   }
 
   remove(id: number) {
