@@ -58,7 +58,7 @@ INSERT INTO repartidor ("nombre", "vehiculo", "patente", "documento", "disponibl
 INSERT INTO usuario ("nombre", "apellido", "email", "contrasena", "telefono", "fechaNacimiento", "genero", "activo") VALUES
   ('Pablo', 'Resk', 'pablo@test.com', '1234', '1133445566', '2002-04-10', 'Masculino', TRUE),
   ('Ana', 'Gómez', 'ana@test.com', '1234', '1177889900', '1995-08-21', 'Femenino', TRUE),
-  ('Lucas', 'Ramos', 'lucas@test.com', '1234', '1155998833', '1998-02-12', 'Masculino', TRUE),
+  ('Lucas', 'Ramos', 'lucas@test.com', '1234', '1155998833', '1998-02-12', 'Masculino', TRUE);
   
 
 
@@ -75,7 +75,7 @@ VALUES
     'Córdoba', '900', 'Buenos Aires', 'Buenos Aires', NULL, 'Casa verde', -34.6001, -58.3802, TRUE),
 
   ((SELECT "usuarioID" FROM usuario WHERE "email"='lucas@test.com'),
-    'Medrano', '1200', 'Buenos Aires', 'Buenos Aires', '2A', 'Puerta negra', -34.6200, -58.4201, TRUE),
+    'Medrano', '1200', 'Buenos Aires', 'Buenos Aires', '2A', 'Puerta negra', -34.6200, -58.4201, TRUE);
     
   
 

@@ -35,6 +35,10 @@ export class ReseniaRestauranteService {
       puntuacion: createDto.puntuacion,
       descripcion: createDto.descripcion,
     });
+    
+    // aca iria la logica para actualizar el promedio de puntuacion del restaurante
+    // por ejemplo, podrías calcular el promedio de todas las reseñas del restaurante
+    // y actualizar un campo en la base de datos
 
     return this.reseniaRepo.save(nuevaResenia);
   }

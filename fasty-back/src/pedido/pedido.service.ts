@@ -208,6 +208,11 @@ export class PedidoService {
   remove(id: number) {
     return `This action removes a #${id} pedido`;
   }
+
+  async
+
+
+
 }
 
 
