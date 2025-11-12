@@ -1,10 +1,19 @@
 <script setup lang="ts">
-import BarraLateral from '@/components/BarraLateral.vue';
+
 
 </script>
 
 <template>
   <main>
-    <BarraLateral />
+    
+    <div class="contenidopagina">
+      <div class="barrabusqueda">
+        <input type="text" placeholder="Buscar..." /> 
+      </div>
+
+      <div class="acciones">
+        
+      </div>
+    </div>
   </main>
 </template>
