@@ -87,3 +87,63 @@ body {
 
 /* estilos */
 
+.home-container {
+  padding: 10px;
+  background: #f5f5f5;
+}
+
+/* Top bar */
+.top-bar {
+  display: flex;
+  align-items: center;
+  background: #0a561c;
+  padding: 10px;
+  border-radius: 10px;
+  gap: 10px;
+}
+
+.search-input {
+  flex-grow: 1;
+  height: 38px;
+  border-radius: 20px;
+  border: none;
+  padding: 0 15px;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  color: white;
+}
+
+/* Grid */
+.action-grid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+/* Cards */
+.action-card {
+  height: 120px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Colores inspirados en tu imagen */
+.favoritos { background: #d8d8d8; color: #0a0a0a; }
+.restaurantes { background: #d42027; }
+.categoria { background: #0a561c; }
+.seguimiento { background: #cfcfcf; color: black; }
+.menu { background: #0a561c; }
+
+.placeholder {
+  background: #d42027;
+}
