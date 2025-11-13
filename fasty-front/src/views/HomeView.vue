@@ -19,16 +19,16 @@ import BarraBusqueda from '@/components/BarraBusqueda.vue';
     <!-- Action buttons -->
     <section class="action-grid">
 
-      <div class="action-card favoritos">⭐ Favoritos</div>
+      <div class="action-card enespera">⭐ placeholder</div>
+      <router-link to="//selectrestaurante">
       <div class="action-card restaurantes">🏪 Restaurantes</div>
-      <div class="action-card categoria">🍔 Categorías</div>
-      <div class="action-card seguimiento">🛵 Seguimiento</div>
-      <div class="action-card menu">🍽️ Menú</div>
-
-      <!-- Resto de placeholders -->
-      <div class="action-card placeholder">a</div>
-      <div class="action-card placeholder">a</div>
-
+      </router-link>
+      <div class="action-card enespera">🍔 placeholder</div>
+      <router-link to="/pedido">
+      <div class="action-card seguimiento">🛵 Seguimiento Pedido</div> 
+      </router-link>
+      <div class="action-card enespera">placeholder</div>
+      <div class="action-card enespera"></div>
     </section>
 
   </div>

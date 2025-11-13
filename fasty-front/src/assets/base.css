@@ -135,6 +135,14 @@ body {
   gap: 12px;
 }
 
+.resenia-grid{
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+
 /* Cards */
 .action-card {
   height: 120px;
@@ -148,12 +156,22 @@ body {
 }
 
 /* Colores inspirados en tu imagen */
-.favoritos { background: #d8d8d8; color: #0a0a0a; }
+.enespera { background: #d8d8d8; color: #0a0a0a; }
 .restaurantes { background: #d42027; }
-.categoria { background: #0a561c; }
 .seguimiento { background: #cfcfcf; color: black; }
-.menu { background: #0a561c; }
 
-.placeholder {
-  background: #d42027;
+.menurestaurante {
+  
 }
+
+.restaurante-info {
+  
+}
+
+.valoracion-info {
+  
+}
+
+/* no las uso aun */
+.categoria { background: #0a561c; }
+.menu { background: #0a561c; }

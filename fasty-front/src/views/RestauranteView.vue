@@ -28,7 +28,3 @@ import BarraBusqueda from '@/components/BarraBusqueda.vue';
   </div>
 </template>
 
-restaurante-info
-resenia-grid
-valoracion-info
-menurestaurante

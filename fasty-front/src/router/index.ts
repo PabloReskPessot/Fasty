@@ -23,6 +23,21 @@ const router = createRouter({
       name: 'login',
       component: LoginView,
     },
+    {
+      path: '/restaurante',
+      name: 'restaurante',
+      component: () => import('../views/RestauranteView.vue'),
+    },
+    {
+      path: '/pedido',
+      name: 'pedido',
+      component: () => import('../views/PedidoView.vue'),
+    },
+    {
+      path: '/selectrestaurante',
+      name: 'selectrestaurante',
+      component: () => import('@/views/SelectRestauranteView.vue'),
+    },
   ],
 })
 
