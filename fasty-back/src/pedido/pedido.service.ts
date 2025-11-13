@@ -137,11 +137,11 @@ export class PedidoService {
 
       pedido.usuario = usuario;
       pedido.direccion = direccion;
-      pedido.direccionRestaurante = direccionRestaurante ?? null;
+      pedido.direccionRestaurante = direccionRestaurante;
       pedido.metodoPago = metodoPago;
-      pedido.descuento = descuentoPedido ?? null;
+      pedido.descuento = descuentoPedido;
       pedido.fechaPedido = new Date();
-      pedido.estado = 'Ingresado';
+      pedido.estado = 'CREADO';
       pedido.subtotal = Number(subtotal.toFixed(2));
       pedido.costoEnvio = costoEnvio;
       pedido.impuesto = impuesto;
@@ -209,7 +209,7 @@ export class PedidoService {
     return `This action removes a #${id} pedido`;
   }
 
-  async
+ 
 
 
 

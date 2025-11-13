@@ -1,41 +1,50 @@
 <script>
 import BarraBusqueda from '@/components/BarraBusqueda.vue';
+import Carrusel from '@/components/Carrusel.vue';
+
+// Importar imágenes como corresponde en Vite
+import imgMac from '@/assets/ElementosGraficos/Carrusel/Bur.jpeg';
+import imgChina from '@/assets/ElementosGraficos/Carrusel/Star.jpeg';
+import imgJapon from '@/assets/ElementosGraficos/Carrusel/Star2.jpeg';
+
 export default {
   components: {
-    BarraBusqueda
+    BarraBusqueda,
+    Carrusel
   },
 
   data() {
-  return {
-    restaurante: {
-      restauranteID: 0,
-      nombre: "",
-      descripcion: "",
-      telefono: "",
-      horarioApertura: "",
-      horarioCierre: "",
-      logo: "",
-      puntuacion: 0,
-
-      categoria: {
-        categoriaRestauranteID: 0,
+    return {
+      imgs: [imgMac, imgChina, imgJapon],   // 🔥 AHORA FUNCIONA
+      restaurante: {
+        restauranteID: 0,
         nombre: "",
-        descripcion: ""
-      },
+        descripcion: "",
+        telefono: "",
+        horarioApertura: "",
+        horarioCierre: "",
+        logo: "",
+        puntuacion: 0,
 
-      direccionRestaurante: {
-        direccionRestauranteID: 0,
-        calle: "",
-        altura: "",
-        ciudad: "",
-        latitud: "",
-        longitud: ""
-      },
+        categoria: {
+          categoriaRestauranteID: 0,
+          nombre: "",
+          descripcion: ""
+        },
 
-      platos: []
-    }
-  };
-},
+        direccionRestaurante: {
+          direccionRestauranteID: 0,
+          calle: "",
+          altura: "",
+          ciudad: "",
+          latitud: "",
+          longitud: ""
+        },
+
+        platos: []
+      }
+    };
+  },
 
   async mounted() {
     const id = this.$route.params.id;
@@ -54,7 +63,6 @@ export default {
     irAMenu(id) {
       this.$router.push(`/restaurante/${id}/menu`);
     }
-
   }
 };
 </script>
@@ -69,7 +77,7 @@ export default {
     
     <!-- 🔻 COLUMNA IZQUIERDA (BOX ROJO) -->
       <div class="info-box">
-        <img src="../assets/ElementosGraficos/RestauranteFoto.jpg" class="logo" />
+        <Carrusel :imagenes="imgs" />
 
         <h2>{{ restaurante.nombre }}</h2>
         <p>{{ restaurante.descripcion }}</p>

@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import BarraBusqueda from '@/components/BarraBusqueda.vue';
+import Carrusel from '@/components/Carrusel.vue';
 
+import imgMac from '@/assets/ElementosGraficos/Carrusel/Mac.jpeg';
+import imgChina from '@/assets/ElementosGraficos/Carrusel/China.jpeg';
+import imgJapon from '@/assets/ElementosGraficos/Carrusel/Japon.jpeg';
 
-
+const imgs = [imgMac, imgChina, imgJapon];
 </script>
 
 <template>
@@ -13,6 +17,8 @@ import BarraBusqueda from '@/components/BarraBusqueda.vue';
       <BarraBusqueda />
     </header>
     
+
+    <Carrusel :imagenes="imgs" />
 
 
     
