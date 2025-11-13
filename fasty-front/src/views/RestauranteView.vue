@@ -16,8 +16,8 @@ import BarraBusqueda from '@/components/BarraBusqueda.vue';
       <div class="restaurante-info">Nombre</div>
 
       <div class="resenia-grid">
-        <div class="action-card resenia">🏪 Restaurantes</div>
-        <div class="valoracion-info">🍔 Categorías</div>
+        <div class="action-card resenia">Restaurantes</div>
+        <div class="valoracion-info">Categorías</div>
       </div>
       
       <div class="action-card menurestaurante">🛵 Seguimiento</div>
