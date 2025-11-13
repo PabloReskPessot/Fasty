@@ -1,6 +1,9 @@
 <script>
 import BarraBusqueda from '@/components/BarraBusqueda.vue';
 export default {
+  components: {
+    BarraBusqueda
+  },
 
   data() {
   return {
@@ -125,7 +128,7 @@ export default {
 
 
 
-<style scoped>
+<style>
 .restaurante-detalle {
   padding: 1.5rem;
 }

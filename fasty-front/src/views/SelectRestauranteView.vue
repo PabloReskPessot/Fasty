@@ -2,6 +2,9 @@
 <script>
 import BarraBusqueda from '@/components/BarraBusqueda.vue';
 export default {
+  components: {
+    BarraBusqueda
+  },
   data() {
     return {
       restaurantes: []  // <-- acá guardás lo que trae la API
@@ -56,6 +59,7 @@ export default {
               <span class="categoria">{{ rest.categoria.nombre }}</span>
               <span class="puntuacion">⭐ {{ rest.puntuacion }}</span>
             </div>
+
           </div>
         </div>
       </router-link>
@@ -67,7 +71,7 @@ export default {
 
 
 
-<style scoped>
+<style>
 .select-restaurante {
   text-align: center;
   padding: 2rem;

@@ -11,7 +11,7 @@
         <input
           type="text"
           v-model="usuario"
-          placeholder="Usuario"
+          placeholder="Correo Electronico"
           class="campo"
         />
         <input
@@ -40,22 +40,49 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
-const router = useRouter();
+// -------------------------
+// 📌 STATE
+// -------------------------
 const usuario = ref("");
 const contrasenia = ref("");
+const router = useRouter();
 
-const login = () => {
-  // Ejemplo de autenticación
-  console.log("Intento de login:", usuario.value, contrasenia.value);
-  router.push("/home");
+// -------------------------
+// 📌 LOGIN REAL
+// -------------------------
+const login = async () => {
+  try {
+    const res = await fetch("http://localhost:3000/usuarios");
+    const usuarios = await res.json();
+
+    const user = usuarios.find(
+      (u: any) => u.email === usuario.value && u.contrasena === contrasenia.value
+    );
+
+    if (!user) {
+      alert("Usuario o contraseña incorrectos");
+      return;
+    }
+
+    // Guardamos sesión
+    localStorage.setItem("usuarioID", user.usuarioID);
+    localStorage.setItem("usuarioNombre", user.nombre);
+
+    router.push("/"); // redirige al home
+  } catch (error) {
+    console.error("Error en login:", error);
+  }
 };
 
+// -------------------------
+// 📌 REGISTER
+// -------------------------
 const goToRegister = () => {
   router.push("/register");
 };
 </script>
 
-<style scoped>
+<style>
 /* Fondo tipo tablero */
 .background {
   position: absolute;

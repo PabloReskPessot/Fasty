@@ -60,7 +60,7 @@ export default {
 
         <p class="menu-precio">$ {{ plato.precio }}</p>
 
-        <button class="btn-add" @click="agregarAlCarrito(plato)">
+        <button class="btn-add" @click="agregarDetallePedido(plato)">
           Agregar al carrito
         </button>
       </div>
@@ -68,7 +68,7 @@ export default {
 
     <!-- 🔻 BOTÓN FINAL PARA IR AL DETALLE PEDIDO -->
     <div class="detallePedido-footer">
-      <button class="btn-detallePedido" @click="irdetallePedido">
+      <button class="btn-detallePedido" @click="irDetallePedido">
         IR AL DETALLE PEDIDO
       </button>
     </div>

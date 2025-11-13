@@ -61,7 +61,7 @@ const pagar = () => {
 };
 </script>
 
-<style scoped>
+<style>
 /* Fondo tipo tablero */
 .background {
   position: absolute;
