@@ -20,9 +20,10 @@ import BarraBusqueda from '@/components/BarraBusqueda.vue';
     <section class="action-grid">
 
       <div class="action-card enespera">⭐ Favoritos</div>
-      <router-link to="//">
+      <router-link to="/selectrestaurante">
       <div class="action-card restaurantes">🏪 Restaurantes</div>
       </router-link to= "/restaurante">
+      
       <div class="action-card pedido">🍔 Pedidos</div>
       <router-link to= "/pedido">
       <div class="action-card seguimiento">🛵 Seguimiento de Pedido</div> 

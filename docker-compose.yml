@@ -35,13 +35,20 @@ services:
       DATABASE_NAME: fasty-db
 
   fasty-front:
-    build: ./fasty-front
+    build:
+      context: ./fasty-front
     ports:
       - "5173:5173"
+    volumes:
+      - ./fasty-front:/app          # monta solo el código fuente
+      - /app/node_modules           # mantiene node_modules del contenedor
+    environment:
+      - VITE_API_URL=http://fasty-back:3000
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=200
     depends_on:
       - fasty-back
-    environment:
-      VITE_API_URL: http://fasty-back:3000
+    command: ["npm", "run", "dev", "--", "--host"]
 
 
   fasty-seeder:
