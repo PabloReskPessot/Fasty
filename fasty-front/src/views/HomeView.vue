@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import BarraBusqueda from '@/components/BarraBusqueda.vue';
+
 
 
 </script>
@@ -8,15 +10,7 @@
 
     <!-- Header -->
     <header class="top-bar">
-      <button class="icon-btn">
-        <span class="material-icons">menu</span>
-      </button>
-
-      <input type="text" placeholder="Buscar..." class="search-input" />
-
-      <button class="icon-btn">
-        <span class="material-icons">account_circle</span>
-      </button>
+      <BarraBusqueda />
     </header>
     
 
