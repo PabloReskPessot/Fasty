@@ -78,7 +78,7 @@ const login = async () => {
 // 📌 REGISTER
 // -------------------------
 const goToRegister = () => {
-  router.push("/register");
+  router.push("/registro");
 };
 </script>
 
