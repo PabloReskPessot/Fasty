@@ -1,81 +1,73 @@
 <script>
+import CantidadPicker from "@/components/CantidadPicker.vue";
+import { carritoService } from "@/services/carrito";
+
 export default {
+  components: { CantidadPicker },
+
   data() {
     return {
-      platos: [],
-      restauranteID: null
+      restauranteID: null,
+      categoriasMenu: [],
+      platosPorCategoria: {}
     };
   },
 
   async mounted() {
     this.restauranteID = this.$route.params.id;
 
-    const response = await fetch(`http://localhost:3000/restaurante/${this.restauranteID}/platos`);
+    const response = await fetch(`http://localhost:3000/restaurante/${this.restauranteID}/menu`);
     const data = await response.json();
 
-    this.platos = data;
+    this.categoriasMenu = Object.keys(data.menu);
+    this.platosPorCategoria = data.menu;
   },
 
   methods: {
-    agregarDetallePedido(plato) {
-      // Ejemplo: guardarlo en localStorage o mandar al store
-      let detallePedido = JSON.parse(localStorage.getItem("detallePedido")) || [];
-      detallePedido.push(plato);
-      localStorage.setItem("detallePedido", JSON.stringify(detallePedido));
-
-      alert(`Añadiste ${plato.nombre} al carrito`);
+    actualizarCarrito() {
+      console.log("Carrito actualizado →", carritoService.obtener());
+      window.dispatchEvent(new Event("carrito-actualizado"));
     },
 
     irDetallePedido() {
-      this.$router.push(`/pedido`);
+      this.$router.push('/pedido');
     }
   }
 };
 </script>
+
 <template>
-  <div class="home-container">
+ <div class="menu-container">
 
-    <!-- Barra Superior -->
-    <header class="top-bar">
-      <h2 style="color:white; font-weight:600;">Menú</h2>
-    </header>
+  <header class="top-bar">
+    <h2 style="color:white; font-weight:600;">Menú</h2>
+  </header>
 
-    <!-- 🟩 GRID DE TARJETAS DEL MENÚ -->
+  <div v-for="categoria in categoriasMenu" :key="categoria" class="categoria-bloque">
+    <h2 class="categoria-titulo">{{ categoria }}</h2>
+
     <div class="menu-grid">
-      <div
-        v-for="plato in platos"
-        :key="plato.platoID"
-        class="menu-card"
-      >
-        <img
-          :src="`/img/platos/${plato.imagen}`"
-          class="menu-img"
-        />
+      <div v-for="plato in platosPorCategoria[categoria]" :key="plato.platoID" class="menu-card">
+
+        <img :src="`/img/platos/${plato.imagen}`" class="menu-img" />
 
         <h3 class="menu-title">{{ plato.nombre }}</h3>
-
-        <p class="menu-desc">
-          {{ plato.descripcion }}
-        </p>
-
+        <p class="menu-desc">{{ plato.descripcion }}</p>
         <p class="menu-precio">$ {{ plato.precio }}</p>
 
-        <button class="btn-add" @click="agregarDetallePedido(plato)">
-          Agregar al carrito
-        </button>
+        <CantidadPicker :plato="plato" @cambio="actualizarCarrito" />
       </div>
     </div>
-
-    <!-- 🔻 BOTÓN FINAL PARA IR AL DETALLE PEDIDO -->
-    <div class="detallePedido-footer">
-      <button class="btn-detallePedido" @click="irDetallePedido">
-        IR AL DETALLE PEDIDO
-      </button>
-    </div>
-
   </div>
+
+  <div class="detallePedido-footer">
+    <button class="btn-detallePedido" @click="irDetallePedido">IR AL DETALLE PEDIDO</button>
+  </div>
+
+</div>
 </template>
-<style scoped>
+
+<style>
 
 /* Grid de platos */
 .menu-grid {

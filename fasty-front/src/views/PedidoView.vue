@@ -1,65 +1,107 @@
 <template>
   <div class="carrito-page">
-    <!-- Fondo -->
-    <div class="background"></div>
 
     <div class="carrito-container">
-      <!-- Sección izquierda: Detalle de pedido -->
+
+      <!-- IZQUIERDA: DETALLE DEL CARRITO -->
       <div class="detalle-pedido">
         <h2 class="titulo">DETALLE DE PEDIDO 🛒</h2>
 
-        <div
+        <div 
           class="item"
-          v-for="(producto, index) in productos"
-          :key="index"
+          v-for="item in carrito"
+          :key="item.platoID"
         >
-          <div class="nombre">{{ producto.nombre }}</div>
-          <div class="cantidad">{{ producto.cantidad }} Unidades</div>
+          <div class="nombre">{{ item.nombre }}</div>
+
+          <!-- CantidadPicker editable -->
+          <CantidadPicker :plato="item" @cambio="actualizarCarrito" />
+
+          <div class="precio">$ {{ item.total * item.cantidad }}</div>
+        </div>
+
+        <div class="total-final">
+          TOTAL: $ {{ total }}
         </div>
       </div>
 
-      <!-- Sección derecha: Dirección y pago -->
+      <!-- DERECHA: DIRECCIONES Y PAGO -->
       <div class="pago-container">
-        <h3 class="subtitulo">DIRECCIÓN</h3>
+        <h3 class="subtitulo">DIRECCIÓN DE ENTREGA</h3>
 
         <select v-model="direccionSeleccionada" class="select-direccion">
           <option disabled value="">Selecciona una dirección</option>
-          <option v-for="(direccion, i) in direcciones" :key="i" :value="direccion">
-            {{ direccion }}
+
+          <option 
+            v-for="dir in direcciones" 
+            :key="dir.direccionID"
+            :value="dir"
+          >
+            {{ formatearDireccion(dir) }}
           </option>
         </select>
 
-        <button class="btn-pagar" @click="pagar">PAGAR</button>
+        <button class="btn-pagar" @click="pagar">
+          PAGAR
+        </button>
       </div>
     </div>
+
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from "vue";
+<script>
+import CantidadPicker from "@/components/CantidadPicker.vue";
+import { carritoService } from "@/services/carrito";
+import { eventBus } from "@/eventBus";
 
-const productos = ref([
-  { nombre: "ENSALADA", cantidad: 2 },
-  { nombre: "PLATO COMPLETO", cantidad: 1 },
-  { nombre: "YOGURT CON FRUTAS", cantidad: 1 },
-]);
+export default {
+  components: { CantidadPicker },
 
-const direcciones = ref([
-  "Av. Siempre Viva 742",
-  "Calle Falsa 123",
-  "Belgrano 1000",
-]);
+  data() {
+    return {
+      carrito: [],
+      total: 0,
 
-const direccionSeleccionada = ref("");
+      usuarioID: null,
+      direcciones: [],
+      direccionSeleccionada: ""
+    };
+  },
 
-const pagar = () => {
-  if (!direccionSeleccionada.value) {
-    alert("Por favor seleccioná una dirección antes de pagar.");
-    return;
+ async mounted() {
+  this.cargar();
+
+  // escuchar cambios del carrito
+  eventBus.onCarritoCambio(() => {
+    this.cargar();
+  });
+
+  // cargar direcciones del usuario
+  this.usuarioID = localStorage.getItem("usuarioID");
+
+  const res = await fetch(`http://localhost:3000/usuarios/${this.usuarioID}`);
+  const data = await res.json();
+
+  this.direcciones = data.direcciones || [];
+},
+
+methods: {
+  cargar() {
+    this.carrito = carritoService.obtener();
+    this.total = carritoService.total();
+  },
+
+  formatearDireccion(d) {
+    return `${d.calle} ${d.altura} ${d.pisoDepartamento || ""} - ${d.ciudad}`;
   }
-  alert(`Pedido confirmado. Envío a: ${direccionSeleccionada.value}`);
+}
+
 };
 </script>
+
+
+
 
 <style>
 /* Fondo tipo tablero */
@@ -142,6 +184,7 @@ const pagar = () => {
   text-align: center;
   min-width: 280px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  
 }
 
 .subtitulo {
@@ -184,4 +227,63 @@ const pagar = () => {
     align-items: center;
   }
 }
+
+.carrito-page {
+  padding: 2rem;
+}
+
+
+
+
+
+
+
+.total-final {
+  margin-top: 1.5rem;
+  font-weight: bold;
+  font-size: 20px;
+  text-align: right;
+}
+
+.btn-pagar {
+  margin-top: 1.5rem;
+  background: #d42027;
+  color: white;
+  padding: 12px;
+  width: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.select-direccion {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+
+
 </style>
+
+<!-- 
+.item {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+.carrito-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.detalle-pedido, .pago-container {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 50%;
+}
+
+
+
+
+
+} -->
