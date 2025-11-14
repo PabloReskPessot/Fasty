@@ -7,8 +7,9 @@ import { RouterLink, RouterView } from 'vue-router'
     <!-- 
      -->
     <nav>
-      <RouterLink to="/" class="explorador">Home</RouterLink> |
-      <RouterLink to="/about" class="explorador">About</RouterLink>
+    <button class="icon-btn">
+        <img src="@/assets/ElementosGraficos/logo.webp" class="usuario-icon">
+      </button>
     </nav>
   </header>
 
@@ -18,5 +19,10 @@ import { RouterLink, RouterView } from 'vue-router'
 <style>
 .explorador{
   color: rebeccapurple;
+}
+
+.usuario-icon {
+  width: 80px;   /* aumentá esto */
+  height: auto;  /* mantiene proporción */
 }
 </style>

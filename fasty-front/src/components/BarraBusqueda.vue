@@ -1,7 +1,9 @@
 <template>
-   <button class="icon-btn" @click="manejarClickUsuario">
+  <router-link to="/">
+   <button class="icon-btn">
         <span class="material-icons">menu</span>
       </button>
+  </router-link>
 
       <input type="text" placeholder="Buscar..." class="search-input" />
 
@@ -27,3 +29,4 @@ export default {
   }
 }
 </script>
+

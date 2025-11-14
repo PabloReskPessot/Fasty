@@ -107,4 +107,11 @@ export default {
   text-decoration: none;
   color: inherit;
 }
+.logo {
+  width: 100%;              /* ocupa el ancho del card */
+  height: 120px;            /* altura fija y consistente */
+  object-fit: cover;        /* recorta para que NO se deforme ni se salga */
+  border-radius: 10px;      /* (opcional) se adapta al estilo del card */
+  display: block;
+}
 </style>

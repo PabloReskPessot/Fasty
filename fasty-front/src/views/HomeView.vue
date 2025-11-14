@@ -25,14 +25,15 @@ const imgs = [imgMac, imgChina, imgJapon];
     <!-- Action buttons -->
     <section class="action-grid">
 
-      <div class="action-card enespera">⭐ Favoritos</div>
+      <div class="action-card enespera"> <img src="../assets/ElementosGraficos/estrella.png">Favoritos</div>
       <router-link to="/selectrestaurante">
-      <div class="action-card restaurantes">🏪 Restaurantes</div>
+      <div class="action-card restaurantes"><img src="../assets/ElementosGraficos/restaurante.png"></img> Restaurantes</div>
       </router-link to= "/restaurante">
       
-      <div class="action-card pedido">🍔 Pedidos</div>
+      <div class="action-card enespera"> Pedidos</div>
+
       <router-link to= "/pedido">
-      <div class="action-card seguimiento">🛵 Seguimiento de Pedido</div> 
+      <div class="action-card seguimiento"><img src="../assets/ElementosGraficos/moto.png"> Mi Pedido</div> 
       </router-link>
       <div class="action-card enespera">placeholder</div>
       <div class="action-card enespera"></div>
@@ -40,3 +41,18 @@ const imgs = [imgMac, imgChina, imgJapon];
 
   </div>
 </template>
+
+<style>
+.action-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-card img {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 8px;
+}
+</style>
