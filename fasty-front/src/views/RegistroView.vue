@@ -55,6 +55,8 @@ const nombre = ref("");
 const apellido = ref("");
 const email = ref("");
 const contrasena = ref("");
+const fechaNacimiento = ref("");
+const genero = ref("");
 
 const router = useRouter();
 
@@ -64,11 +66,18 @@ const registrar = async () => {
     return;
   }
 
+  if (contrasena.value.length < 6) {
+    alert("La contraseña debe tener mínimo 6 caracteres");
+    return;
+  }
+
   const body = {
     nombre: nombre.value,
     apellido: apellido.value,
     email: email.value,
     contrasena: contrasena.value,
+    fechaNacimiento: fechaNacimiento.value || null,
+    genero: genero.value || null,
   };
 
   try {
@@ -79,8 +88,8 @@ const registrar = async () => {
     });
 
     if (!res.ok) {
-      const error = await res.json();
-      alert("Error al registrarse: " + error.message);
+      const err = await res.json();
+      alert("Error al registrarse: " + err.message);
       return;
     }
 

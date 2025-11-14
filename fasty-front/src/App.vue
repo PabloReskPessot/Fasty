@@ -20,9 +20,7 @@ import CarritoFlotante from "@/components/CarritoFlotante.vue";
   color: rebeccapurple;
 }
 
-.usuario-icon {
-  
-}
+
 
 .logotoinicio {
   background: none;
